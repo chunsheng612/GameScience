@@ -4,8 +4,325 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>科學能量矩陣</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Turret+Road:wght@700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- ========================================================================= -->
+    <!--  CSS 樣式區塊                                                          -->
+    <!-- ========================================================================= -->
+    <style>
+        :root {
+            --bg-color: #0f0c29;
+            --primary-color: #24243e;
+            --secondary-color: #302b63;
+            --text-color: #e0e0e0;
+            --glow-color: #00ffff; /* 亮青色 */
+            --accent-color: #ff4757; /* 強調紅色 */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Noto Sans TC', 'Turret Road', sans-serif;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: linear-gradient(to right, var(--bg-color), var(--secondary-color), var(--bg-color));
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Turret Road', sans-serif;
+            font-size: 3rem;
+            color: var(--glow-color);
+            text-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color), 0 0 20px #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .topic-button {
+            background: var(--primary-color);
+            border: 2px solid var(--glow-color);
+            color: var(--text-color);
+            padding: 2rem 1rem;
+            font-size: 1.5rem;
+            font-family: 'Turret Road', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px var(--glow-color), inset 0 0 5px rgba(0, 255, 255, 0.5);
+            position: relative;
+            border-radius: 5px;
+        }
+
+        .topic-button:hover {
+            background: var(--secondary-color);
+            color: #fff;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        /* User Status Bar Styles */
+        .user-status-bar {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: none; /* Initially hidden */
+            align-items: center;
+            backdrop-filter: blur(3px);
+            z-index: 1001;
+        }
+
+        #user-display {
+            color: var(--glow-color);
+            margin-right: 1rem;
+        }
+
+        .logout-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Noto Sans TC', sans-serif;
+            transition: background 0.3s;
+        }
+
+        .logout-button:hover {
+            background: #d63031;
+        }
+
+        /* Login Modal Styles */
+        .login-box {
+            background: var(--primary-color);
+            border: 2px solid var(--glow-color);
+            padding: 2.5rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px var(--glow-color);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .login-box h2 {
+            font-family: 'Turret Road', sans-serif;
+            color: var(--glow-color);
+            margin-top: 0;
+        }
+
+        .login-box input {
+            width: 80%;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--glow-color);
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .login-box button {
+            width: 85%;
+            padding: 0.8rem;
+            margin-top: 1.5rem;
+            background: var(--glow-color);
+            color: var(--bg-color);
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .login-box button:hover {
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+
+        .login-error {
+            color: var(--accent-color);
+            margin-top: 1rem;
+            height: 1.2rem;
+        }
+
+        /* Completed Topic Styles */
+        .topic-button.completed {
+            background: var(--secondary-color);
+            border-color: #00b894; /* A green glow for completed */
+            box-shadow: 0 0 10px #00b894, inset 0 0 8px rgba(0, 184, 148, 0.7);
+            color: #bdc3c7;
+        }
+        .topic-button.completed::after {
+            content: '✓ 已學習';
+            position: absolute;
+            bottom: 0.5rem;
+            left: 0;
+            width: 100%;
+            font-size: 0.8rem;
+            font-family: 'Noto Sans TC', sans-serif;
+            color: #00b894;
+        }
+
+        /* Mark as Completed Button Styles */
+        .mark-completed-button {
+            display: block;
+            width: 80%;
+            margin: 2rem auto 0;
+            padding: 1rem;
+            background: var(--glow-color);
+            color: var(--bg-color);
+            border: none;
+            font-size: 1.2rem;
+            font-family: 'Turret Road', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .mark-completed-button:hover {
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+        .mark-completed-button:disabled {
+            background: #576574;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        /* Modal Styles */
+        .modal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 12, 41, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            padding: 1rem;
+        }
+
+        .modal-container.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--primary-color);
+            border: 2px solid var(--glow-color);
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 20px var(--glow-color);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--glow-color);
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            line-height: 1;
+        }
+        .close-button:hover {
+            transform: scale(1.2);
+            color: var(--accent-color);
+        }
+
+        .modal-svg {
+            width: 100%;
+            min-height: 250px;
+            background-color: #000;
+            margin-bottom: 2rem;
+            border-radius: 5px;
+        }
+        .modal-svg svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .modal-description {
+            text-align: left;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .modal-description strong {
+            color: var(--glow-color);
+            font-weight: 700;
+            display: block;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .modal-description br {
+            display: block;
+            margin: 0.5rem 0;
+            content: "";
+        }
+
+        .modal-description hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--accent-color), rgba(0, 0, 0, 0));
+            margin: 2rem 0;
+        }
+
+        .modal-description i {
+            color: var(--accent-color);
+            font-family: 'Turret Road', sans-serif;
+            font-style: normal;
+        }
+
+        #modal-title { color: var(--glow-color); font-size: 2.5rem; font-family: 'Turret Road', sans-serif;}
+        #modal-tagline { color: var(--text-color); font-style: italic; opacity: 0.9; margin-top: -1.5rem; margin-bottom: 2rem;}
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        /* Loader */
+        .loader { border: 5px solid #f3f3f3; border-top: 5px solid var(--glow-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 5rem auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
     <!-- 使用者狀態顯示區 -->
@@ -46,6 +363,209 @@
     </div>
 
 
-    <script src="script.js" defer></script>
+    <!-- ========================================================================= -->
+    <!--  JavaScript 程式碼區塊                                                  -->
+    <!-- ========================================================================= -->
+    <script>
+        // =========================================================================
+        //  STEP 1: 配置與變數
+        // =========================================================================
+
+        // !!! 非常重要：請將此處的 URL 替換成您自己的 Google Apps Script Web App URL !!!
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwspP3Q4FjXLLv9E8jP-kksiFDtFOWiWJMhAAYAdKHeDm7HCwS7cMngLqfKPKDNGDqKSA/exec';
+
+        // DOM 元素
+        const topicGrid = document.getElementById('topic-grid');
+        const modalView = document.getElementById('modal-view');
+        const closeModalButton = document.getElementById('close-modal');
+        const loginModal = document.getElementById('login-modal');
+        const loginInput = document.getElementById('login-input');
+        const loginButton = document.getElementById('login-button');
+        const loginError = document.getElementById('login-error');
+        const userStatusBar = document.getElementById('user-status-bar');
+        const userDisplay = document.getElementById('user-display');
+        const logoutButton = document.getElementById('logout-button');
+        const markCompletedButton = document.getElementById('mark-completed-button');
+
+        const modal = {
+            svgContainer: document.getElementById('modal-svg-container'),
+            title: document.getElementById('modal-title'),
+            tagline: document.getElementById('modal-tagline'),
+            description: document.getElementById('modal-description')
+        };
+
+        // 應用程式狀態
+        let currentUser = null;
+        let allTopics = [];
+        let completedTopics = [];
+        let currentOpenTopicID = null;
+
+        // =========================================================================
+        //  STEP 2: 動態 SVG 動畫庫
+        // =========================================================================
+        const scienceVisuals = {
+            'T01': `<svg viewBox="0 0 400 200"><rect width="400" height="200" fill="#000"/><path d="M 50 100 H 350" stroke="#00ffff" stroke-dasharray="5 5" opacity="0.5"/><polygon points="-15,-10 15,0 -15,10" fill="#ff4757"><animateMotion dur="4s" repeatCount="indefinite" path="M 50 100 H 350" /></polygon><circle r="15" fill="#487eb0"><animateMotion dur="4s" repeatCount="indefinite" path="M 50 100 H 350" /></circle></svg>`,
+            'T02': `<svg viewBox="0 0 300 300"><rect width="300" height="300" fill="#000"/><rect y="280" width="300" height="20" fill="#7f8fa6" /><circle cx="150" cy="80" r="15" fill="#e84118"><animate attributeName="cy" dur="1.5s" repeatCount="indefinite" values="80 ; 265" keyTimes="0 ; 1" calcMode="spline" keySplines="0.5 0 1 1" /></circle></svg>`,
+            'T03': `<svg viewBox="0 0 400 200"><rect width="400" height="200" fill="#000"/><path d="M50 150 L350 150" stroke="#7f8fa6" stroke-width="5"/><polygon points="200,150 180,110 220,110" fill="#487eb0"/><g><rect x="100" y="50" width="50" height="50" fill="#e84118"/><animateTransform attributeName="transform" type="rotate" dur="4s" repeatCount="indefinite" values="0 200 150; 20 200 150; -20 200 150; 0 200 150" keyTimes="0; 0.25; 0.75; 1"/></g></svg>`,
+            'T04': `<svg viewBox="0 0 400 200"><rect width="400" height="200" fill="#000"/><rect id="cart" y="120" width="100" height="40" fill="#487eb0"><animate attributeName="x" dur="5s" repeatCount="indefinite" values="20; 280; 280" keyTimes="0; 0.8; 1"/></rect><rect id="box" y="80" width="30" height="40" fill="#e84118"><animate attributeName="x" dur="5s" repeatCount="indefinite" values="55; 315; 315" keyTimes="0; 0.8; 1"/></rect></svg>`,
+            'T05': `<svg viewBox="0 0 400 200"><rect width="400" height="200" fill="#000"/><rect x="150" y="80" width="40" height="40" fill="#00a8ff"><animate attributeName="x" dur="3s" repeatCount="indefinite" values="150; 40; 300; 150" keyTimes="0; 0.3; 0.7; 1" /></rect><path stroke="#f5f6fa" stroke-width="4" fill="none"><animate attributeName="d" dur="3s" repeatCount="indefinite" values="M 0 100 L 150 100; M 0 100 L 40 100; M 0 100 L 300 100; M 0 100 L 150 100" keyTimes="0; 0.3; 0.7; 1" /></path></svg>`,
+            'T06': `<svg viewBox="0 0 400 300"><rect width="400" height="300" fill="#000"/><g transform="translate(200, 150)"><path d="M -150 0 A 150 150 0 0 1 150 0" stroke="#00ffff" stroke-width="2" fill="none" opacity="0.5"/><circle r="15" fill="#ff4757"><animateMotion dur="4s" repeatCount="indefinite" path="M -150 0 A 150 150 0 0 1 150 0 A 150 150 0 0 1 -150 0" /></circle></g></svg>`,
+            'T07': `<svg viewBox="0 0 400 200"><rect width="400" height="200" fill="#000"/><rect y="150" width="400" height="50" fill="#7f8fa6" /><rect x="20" y="110" width="40" height="40" fill="#e84118"><animate attributeName="x" dur="4s" repeatCount="indefinite" values="20; 340" calcMode="spline" keySplines="0.1 0.8 0.2 1"/></rect></svg>`,
+            'T08': `<svg viewBox="0 0 400 200"><rect width="400" height="200" fill="#000"/><polygon points="200,150 180,180 220,180" fill="#7f8fa6"/><g><path d="M50,110 L350,150" stroke="#00a8ff" stroke-width="5"/><animateTransform attributeName="transform" type="rotate" dur="4s" repeatCount="indefinite" values="5 200 165; -5 200 165; 5 200 165" /></g><rect x="30" y="77" width="40" height="40" fill="#e84118"><animateTransform attributeName="transform" type="rotate" dur="4s" repeatCount="indefinite" values="5 200 165; -5 200 165; 5 200 165" /></rect><rect x="330" y="140" width="20" height="20" fill="#f5f6fa"><animateTransform attributeName="transform" type="rotate" dur="4s" repeatCount="indefinite" values="5 200 165; -5 200 165; 5 200 165" /></rect></svg>`,
+            'T09': `<svg viewBox="0 0 400 200"><rect width="400" height="200" fill="#000"/><path d="M0 80 H400" stroke="#fff" stroke-dasharray="5 5"/><path d="M0 140 H400" stroke="#fff" stroke-dasharray="5 5"/><circle r="10" cy="80" fill="#ff4757"><animate attributeName="cx" dur="3s" repeatCount="indefinite" values="20; 380"/></circle><circle r="10" cy="140" fill="#00a8ff"><animate attributeName="cx" dur="5s" repeatCount="indefinite" values="20; 380"/></circle></svg>`,
+            'T10': `<svg viewBox="0 0 400 200"><rect width="400" height="200" fill="#000"/><g transform="translate(50, 0)"><polygon points="100,20 20,180 180,180" fill="none" stroke="#00ff00" stroke-width="4"><animate attributeName="stroke" dur="2s" repeatCount="indefinite" values="#00ff00; #00ffff; #00ff00"/></polygon></g><g transform="translate(250, 0)"><rect x="20" y="20" width="160" height="160" fill="none" stroke="#ff4757" stroke-width="4"><animateTransform attributeName="transform" type="skewX" dur="3s" repeatCount="indefinite" values="0; 20; -20; 0" keyTimes="0; 0.25; 0.75; 1"/></rect></g></svg>`,
+        };
+
+        // =========================================================================
+        //  STEP 3: 應用程式邏輯 (已升級並修復錯誤)
+        // =========================================================================
+
+        function checkLoginState() {
+            currentUser = localStorage.getItem('science-app-user');
+            if (currentUser) {
+                loginModal.classList.remove('active');
+                userDisplay.textContent = `使用者: ${currentUser}`;
+                userStatusBar.style.display = 'flex';
+                fetchDataForUser(currentUser);
+            } else {
+                loginModal.classList.add('active');
+                userStatusBar.style.display = 'none';
+            }
+        }
+
+        function handleLogin() {
+            const userID = loginInput.value.trim();
+            if (userID) {
+                if (!/^\d{3}-\d{2}$/.test(userID)) {
+                     loginError.textContent = '格式錯誤！請輸入如 701-01 的格式。';
+                     return;
+                }
+                loginError.textContent = '';
+                localStorage.setItem('science-app-user', userID);
+                checkLoginState();
+            } else {
+                loginError.textContent = '使用者ID不可為空！';
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('science-app-user');
+            currentUser = null;
+            allTopics = [];
+            completedTopics = [];
+            topicGrid.innerHTML = '<div class="loader"></div>';
+            checkLoginState();
+        }
+
+        function fetchDataForUser(userID) {
+            topicGrid.innerHTML = '<div class="loader"></div>';
+            fetch(`${WEB_APP_URL}?user=${userID}`)
+                .then(res => res.json())
+                .then(data => {
+                    allTopics = data.topics;
+                    completedTopics = data.completed || [];
+                    renderTopicGrid();
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    topicGrid.innerHTML = '<p style="color:red; font-size:1.2rem;">無法加載宇宙數據庫...<br>請檢查網絡連線或確認 script.js 中的 WEB_APP_URL 是否正確。</p>';
+                });
+        }
+
+        function renderTopicGrid() {
+            topicGrid.innerHTML = '';
+            allTopics.forEach(topic => {
+                const button = document.createElement('button');
+                button.className = 'topic-button';
+                button.textContent = topic.TopicName;
+                if (completedTopics.includes(topic.TopicID)) {
+                    button.classList.add('completed');
+                }
+                button.addEventListener('click', () => openModal(topic));
+                topicGrid.appendChild(button);
+            });
+        }
+
+        function openModal(topicData) {
+            currentOpenTopicID = topicData.TopicID;
+            modal.title.textContent = topicData.TopicName;
+            modal.tagline.textContent = topicData.TopicTagline;
+
+            // ✅ 錯誤修復：增加防呆機制，處理可能的空內容
+            const content = topicData.LearningContent || "這個主題目前沒有詳細內容。";
+            let formattedContent = content
+                .replace(/---/g, '<hr>')
+                .replace(/\[\/\/ (.*?) \/\/\]/g, '<i>[$1]</i>');
+                
+            modal.description.innerHTML = formattedContent;
+            modal.svgContainer.innerHTML = scienceVisuals[topicData.TopicID] || '<p>動畫加載失敗...</p>';
+            
+            if (completedTopics.includes(currentOpenTopicID)) {
+                markCompletedButton.textContent = '✓ 已學習';
+                markCompletedButton.disabled = true;
+            } else {
+                markCompletedButton.textContent = '標記為已學習';
+                markCompletedButton.disabled = false;
+            }
+
+            modalView.classList.add('active');
+            // ✅ 優化：確保是 modal-content 區塊滾動到頂部
+            modal.description.parentElement.scrollTop = 0; 
+        }
+
+        function markAsCompleted() {
+            if (!currentUser || !currentOpenTopicID) return;
+            markCompletedButton.textContent = '記錄中...';
+            markCompletedButton.disabled = true;
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify({ 
+                    userID: currentUser, 
+                    topicID: currentOpenTopicID 
+                })
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    if (!completedTopics.includes(currentOpenTopicID)) {
+                        completedTopics.push(currentOpenTopicID);
+                    }
+                    renderTopicGrid();
+                    markCompletedButton.textContent = '✓ 已學習';
+                } else {
+                    markCompletedButton.textContent = '記錄失敗，請重試';
+                    markCompletedButton.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error saving progress:', error);
+                markCompletedButton.textContent = '記錄失敗，請重試';
+                markCompletedButton.disabled = false;
+            });
+        }
+
+        // =========================================================================
+        //  STEP 4: 事件監聽
+        // =========================================================================
+        document.addEventListener('DOMContentLoaded', checkLoginState);
+        loginButton.addEventListener('click', handleLogin);
+        loginInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') handleLogin();
+        });
+        logoutButton.addEventListener('click', handleLogout);
+        closeModalButton.addEventListener('click', () => modalView.classList.remove('active'));
+        markCompletedButton.addEventListener('click', markAsCompleted);
+
+        modalView.addEventListener('click', (event) => {
+            if (event.target === modalView) modalView.classList.remove('active');
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modalView.classList.contains('active')) modalView.classList.remove('active');
+        });
+    </script>
 </body>
 </html>
