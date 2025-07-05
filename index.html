@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科學能量矩陣</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Turret+Road:wght@700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 使用者狀態顯示區 -->
+    <div id="user-status-bar" class="user-status-bar">
+        <span id="user-display">未登入</span>
+        <button id="logout-button" class="logout-button">登出</button>
+    </div>
+
+    <div class="main-container">
+        <h1>科學能量矩陣</h1>
+        <p id="subtitle" class="subtitle">讀取宇宙數據... 請點擊下方模塊，解鎖隱藏的知識檔案。</p>
+        <div id="topic-grid" class="topic-grid">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <!-- 學習內容彈出視窗 -->
+    <div id="modal-view" class="modal-container">
+        <div class="modal-content">
+            <button id="close-modal" class="close-button">&times;</button>
+            <div id="modal-svg-container" class="modal-svg"></div>
+            <h2 id="modal-title"></h2>
+            <h3 id="modal-tagline"></h3>
+            <div id="modal-description" class="modal-description"></div>
+            <button id="mark-completed-button" class="mark-completed-button">標記為已學習</button>
+        </div>
+    </div>
+
+    <!-- 登入彈出視窗 -->
+    <div id="login-modal" class="modal-container active">
+        <div class="login-box">
+            <h2>使用者身份驗證</h2>
+            <p>請輸入您的班級座號 (例如: 701-01)</p>
+            <input type="text" id="login-input" placeholder="班級-座號">
+            <button id="login-button">進入矩陣</button>
+            <p id="login-error" class="login-error"></p>
+        </div>
+    </div>
+
+
+    <script src="script.js" defer></script>
+</body>
+</html>
